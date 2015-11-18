@@ -39,6 +39,5 @@ setup(name='pyoptmat',
       ],
       entry_points="""
       # -*- Entry points: -*-
-      """,
-      ext_modules=ext_modules
+      """
       )
