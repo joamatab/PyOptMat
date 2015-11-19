@@ -29,9 +29,9 @@ class Material(object):
         c0 = c * 1e-8
         self.__w = None
         self.__eps = None
-        self._params = params
-        model = self._params['model']
-        self.im_factor = self._params.get('im_factor', 1.0)
+        self.params = params
+        model = self.params['model']
+        self.im_factor = self.params.get('im_factor', 1.0)
         self.model = model
         self.RIs = {
             'air': 1.0,
@@ -88,34 +88,34 @@ class Material(object):
             from pymwm.material.palik import Palik
             self._palik = Palik('copper')
         elif 'gold_dl' in model:
-            self._params['e'] = 5.3983
-            self._params['wp'] = 13.978 / c0 * 10
-            self._params['gp'] = 1.0334e-1 / c0 * 10
-            self._params['ss'] = (2.5417 * 0.2679, 2.5417 * 0.7321)
-            self._params['ws'] = (4.2739 / c0 * 10, 5.2254 / c0 * 10)
-            self._params['gs'] = (2 * 4.3533e-1 / c0 * 10,
+            self.params['e'] = 5.3983
+            self.params['wp'] = 13.978 / c0 * 10
+            self.params['gp'] = 1.0334e-1 / c0 * 10
+            self.params['ss'] = (2.5417 * 0.2679, 2.5417 * 0.7321)
+            self.params['ws'] = (4.2739 / c0 * 10, 5.2254 / c0 * 10)
+            self.params['gs'] = (2 * 4.3533e-1 / c0 * 10,
                                   2 * 6.6077e-1 / c0 * 10)
         elif 'silver_dl' in model:
-            self._params['e'] = 1.7984
-            self._params['wp'] = 13.359 / c0 * 10
-            self._params['gp'] = 0.087167 / c0 * 10
-            self._params['ss'] = (3.0079, 2.3410)
-            self._params['ws'] = (8.1635 / c0 * 10, 38.316 / c0 * 10)
-            self._params['gs'] = (437.85 / c0 * 10, 60.574 / c0 * 10)
+            self.params['e'] = 1.7984
+            self.params['wp'] = 13.359 / c0 * 10
+            self.params['gp'] = 0.087167 / c0 * 10
+            self.params['ss'] = (3.0079, 2.3410)
+            self.params['ws'] = (8.1635 / c0 * 10, 38.316 / c0 * 10)
+            self.params['gs'] = (437.85 / c0 * 10, 60.574 / c0 * 10)
         elif 'gold_d' in model:
-            self._params['e'] = 9.0685
-            self._params['wp'] = 2 * np.pi * 2.1556 / c0 * 10
-            self._params['gp'] = 2 * np.pi * 1.836e-2 / c0 * 10
+            self.params['e'] = 9.0685
+            self.params['wp'] = 2 * np.pi * 2.1556 / c0 * 10
+            self.params['gp'] = 2 * np.pi * 1.836e-2 / c0 * 10
         elif 'silver_d' in model:
-            self._params['e'] = 4.0
-            self._params['wp'] = 13.7 / c0 * 10
-            self._params['gp'] = 2 * np.pi * 8.5e-2 / c0 * 10
+            self.params['e'] = 4.0
+            self.params['wp'] = 13.7 / c0 * 10
+            self.params['gp'] = 2 * np.pi * 8.5e-2 / c0 * 10
         elif model == 'polymer':
-            self._params['e'] = 2.26
+            self.params['e'] = 2.26
         elif model == 'solution':
-            self._params['e'] = self._params['RI'] ** 2
+            self.params['e'] = self.params['RI'] ** 2
         elif model in self.RIs:
-            self._params['e'] = self.RIs[model] ** 2
+            self.params['e'] = self.RIs[model] ** 2
 
     def __call__(self, w):
         """Return a float indicating the permittivity.
@@ -129,7 +129,7 @@ class Material(object):
         if self.__w is None or w != self.__w:
             self.__w = w
             model = self.model
-            p = self._params
+            p = self.params
             if model in self.RIs or model == 'polymer' or model == 'solution':
                 self.__eps = p['e']
             elif model[-3:] == '_jc':
