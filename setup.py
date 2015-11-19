@@ -13,7 +13,7 @@ setup(name='pyoptmat',
       long_description=long_description,
       # Get more strings from http://www.python.org/pypi?%3Aaction=list_classifiers
       classifiers=[
-          "Development Status :: 1 - Planning",
+          "Development Status :: 4 - Beta",
           "Intended Audience :: Developers",
           "Intended Audience :: Science/Research",
           "Programming Language :: Python",
@@ -25,13 +25,15 @@ setup(name='pyoptmat',
       author='Munehiro Nishida',
       author_email='mnishida@hiroshima-u.ac.jp',
       url='http://home.hiroshima-u.ac.jp/mnishida/',
-      license="'GPL2'",
+      license="'GPLv2+'",
       packages=find_packages(exclude=['ez_setup']),
       include_package_data=True,
       test_requires=['Nose'],
       zip_safe=False,
       install_requires=[
           'setuptools',
+          'numpy',
+          'scipy'
           # -*- Extra requirements: -*-
           # 'numpy>=1.7',
           # 'scipy>=0.12',
