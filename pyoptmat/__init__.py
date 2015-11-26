@@ -25,14 +25,16 @@ class Material(object):
                 'e', 'wp', 'gp': For 'drude'
                 'e1', 'e1', 'tau', 'sp': For 'haftel'.
                 'e', 'wp', 'gp', 'ss', 'ws', 'gs': For 'drude_lorentz'.
+                'im_factor': A float indicating the reduction factor for the
+                    imaginary part of the dielectric constant
         """
         c0 = c * 1e-8
         self.__w = None
         self.__eps = None
         self.params = params
         model = self.params['model']
-        self.im_factor = self.params.get('im_factor', 1.0)
         self.model = model
+        self.__im_factor = self.params.get('im_factor', 1.0)
         self.RIs = {
             'air': 1.0,
             'water': 1.333,
@@ -70,22 +72,22 @@ class Material(object):
             'SF6': 1.80518,
             'SF03': 1.84666}
         if 'gold_jc' in model:
-            from pymwm.material.jc import Johnson_Christy
+            from pyoptmat.jc import Johnson_Christy
             self._johnson_christy = Johnson_Christy('gold')
         elif 'silver_jc' in model:
-            from pymwm.material.jc import Johnson_Christy
+            from pyoptmat.jc import Johnson_Christy
             self._johnson_christy = Johnson_Christy('silver')
         elif 'copper_jc' in model:
-            from pymwm.material.jc import Johnson_Christy
+            from pyoptmat.jc import Johnson_Christy
             self._johnson_christy = Johnson_Christy('copper')
         if 'gold_palik' in model:
-            from pymwm.material.palik import Palik
+            from pyoptmat.palik import Palik
             self._palik = Palik('gold')
         elif 'silver_palik' in model:
-            from pymwm.material.palik import Palik
+            from pyoptmat.palik import Palik
             self._palik = Palik('silver')
         elif 'copper_palik' in model:
-            from pymwm.material.palik import Palik
+            from pyoptmat.palik import Palik
             self._palik = Palik('copper')
         elif 'gold_dl' in model:
             self.params['e'] = 5.3983
@@ -94,7 +96,7 @@ class Material(object):
             self.params['ss'] = (2.5417 * 0.2679, 2.5417 * 0.7321)
             self.params['ws'] = (4.2739 / c0 * 10, 5.2254 / c0 * 10)
             self.params['gs'] = (2 * 4.3533e-1 / c0 * 10,
-                                  2 * 6.6077e-1 / c0 * 10)
+                                 2 * 6.6077e-1 / c0 * 10)
         elif 'silver_dl' in model:
             self.params['e'] = 1.7984
             self.params['wp'] = 13.359 / c0 * 10
@@ -116,6 +118,15 @@ class Material(object):
             self.params['e'] = self.params['RI'] ** 2
         elif model in self.RIs:
             self.params['e'] = self.RIs[model] ** 2
+
+    @property
+    def im_factor(self):
+        return self.__im_factor
+
+    @im_factor.setter
+    def im_factor(self, factor):
+        self.__w = None
+        self.__im_factor = factor
 
     def __call__(self, w):
         """Return a float indicating the permittivity.
@@ -157,12 +168,12 @@ class Material(object):
         return self.__eps
 
     def _drude(self, w, p):
-        return p['e'] - p['wp'] ** 2 / (w ** 2 +
-                                        1.0j * self.im_factor * p['gp'] * w)
+        eps = p['e'] - p['wp'] ** 2 / (w ** 2 + 1.0j * p['gp'] * w)
+        return eps.real + 1j * self.im_factor * eps.imag
 
     def _drude_lorentz(self, w, p):
         eps = p['e'] - p['wp'] ** 2 / (w ** 2 + 1.0j * p['gp'] * w)
         for sn, wn, gn in zip(p['ss'], p['ws'], p['gs']):
             eps -= sn * wn ** 2 / (w ** 2 - wn ** 2 +
-                                   1.0j * self.im_factor * gn * w)
-        return eps
+                                   1.0j * gn * w)
+        return eps.real + 1j * self.im_factor * eps.imag
