@@ -32,7 +32,7 @@ class Material(object):
         self.__w = None
         self.__eps = None
         self.params = params
-        model = self.params['model']
+        model = self.params.get('model', 'dielectric')
         self.model = model
         self.__im_factor = self.params.get('im_factor', 1.0)
         self.RIs = {
@@ -43,6 +43,9 @@ class Material(object):
             'ZnSe': 2.4,
             'Ge': 4.092,
             'Si': 3.4179,
+            'GaAs': 3.7,
+            'AlAs': 3.0,
+            'AlOx': 1.6,
             'FK03': 1.43875,
             'FK02': 1.456,
             'FK01': 1.497,
@@ -114,7 +117,7 @@ class Material(object):
             self.params['gp'] = 2 * np.pi * 8.5e-2 / c0 * 10
         elif model == 'polymer':
             self.params['e'] = 2.26
-        elif model == 'solution':
+        elif model in ['solution', 'dielectric']:
             self.params['e'] = self.params['RI'] ** 2
         elif model in self.RIs:
             self.params['e'] = self.RIs[model] ** 2
@@ -141,7 +144,8 @@ class Material(object):
             self.__w = w
             model = self.model
             p = self.params
-            if model in self.RIs or model == 'polymer' or model == 'solution':
+            if model in self.RIs or model in [
+                    'polymer', 'solution', 'dielectric']:
                 self.__eps = p['e']
             elif model[-3:] == '_jc':
                 self.__eps = self._johnson_christy(w.real)
@@ -169,11 +173,17 @@ class Material(object):
 
     def _drude(self, w, p):
         eps = p['e'] - p['wp'] ** 2 / (w ** 2 + 1.0j * p['gp'] * w)
-        return eps.real + 1j * self.im_factor * eps.imag
+        val = eps.real + 1j * self.im_factor * eps.imag
+        if val.imag < 1.0e-8:
+            val = val.real + 1.0e-8j
+        return val
 
     def _drude_lorentz(self, w, p):
         eps = p['e'] - p['wp'] ** 2 / (w ** 2 + 1.0j * p['gp'] * w)
         for sn, wn, gn in zip(p['ss'], p['ws'], p['gs']):
             eps -= sn * wn ** 2 / (w ** 2 - wn ** 2 +
                                    1.0j * gn * w)
-        return eps.real + 1j * self.im_factor * eps.imag
+        val = eps.real + 1j * self.im_factor * eps.imag
+        if val.imag < 1.0e-8:
+            val = val.real + 1.0e-8j
+        return val
