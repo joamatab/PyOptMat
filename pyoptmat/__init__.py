@@ -38,6 +38,7 @@ class Material(object):
         self.RIs = {
             'air': 1.0,
             'water': 1.333,
+            'metal': 0.5 + 10j,
             'SiN': 2.0,
             'KRS5': 2.4,
             'ZnSe': 2.4,
