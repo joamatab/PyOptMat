@@ -39,6 +39,8 @@ class Material(object):
             'air': 1.0,
             'water': 1.333,
             'metal': 0.5 + 10j,
+            'metal_SR': np.sqrt(5) * 1j,
+            'metal_kd': np.sqrt(110) * 1j,
             'SiN': 2.0,
             'KRS5': 2.4,
             'ZnSe': 2.4,
@@ -175,8 +177,8 @@ class Material(object):
     def _drude(self, w, p):
         eps = p['e'] - p['wp'] ** 2 / (w ** 2 + 1.0j * p['gp'] * w)
         val = eps.real + 1j * self.im_factor * eps.imag
-        if val.imag < 1.0e-8:
-            val = val.real + 1.0e-8j
+        if val.imag < 1.0e-6:
+            val = val.real + 1.0e-6j
         return val
 
     def _drude_lorentz(self, w, p):
@@ -185,6 +187,6 @@ class Material(object):
             eps -= sn * wn ** 2 / (w ** 2 - wn ** 2 +
                                    1.0j * gn * w)
         val = eps.real + 1j * self.im_factor * eps.imag
-        if val.imag < 1.0e-8:
-            val = val.real + 1.0e-8j
+        if val.imag < 1.0e-6:
+            val = val.real + 1.0e-6j
         return val
