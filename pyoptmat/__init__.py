@@ -143,31 +143,32 @@ class Material(object):
         Raises:
             ValueError: The model is not defined.
         """
-        if self.__w is None or w != self.__w:
-            self.__w = w
+        wr = w.real
+        if self.__w is None or wr != self.__w:
+            self.__w = wr
             model = self.model
             p = self.params
             if model in self.RIs or model in [
                     'polymer', 'solution', 'dielectric']:
                 self.__eps = p['e']
             elif model[-3:] == '_jc':
-                self.__eps = self._johnson_christy(w.real)
+                self.__eps = self._johnson_christy(wr)
             elif model[-6:] == '_palik':
-                self.__eps = self._palik(w.real)
+                self.__eps = self._palik(wr)
             elif model[-3:] == '_dl':
-                self.__eps = self._drude_lorentz(w, p)
+                self.__eps = self._drude_lorentz(wr, p)
             elif model[-2:] == '_d':
-                self.__eps = self._drude(w, p)
+                self.__eps = self._drude(wr, p)
             elif model[-2:] == '_h':
-                self.__eps = self._haftel(w, p)
+                self.__eps = self._haftel(wr, p)
             elif model == 'pec':
                 self.__eps = -1e8
             elif model == 'drude':
-                self.__eps = self._drude(w, p)
+                self.__eps = self._drude(wr, p)
             elif model == 'haftel':
-                self.__eps = self._haftel(w, p)
+                self.__eps = self._haftel(wr, p)
             elif model == 'drude_lorentz':
-                self.__eps = self._drude_lorentz(w, p)
+                self.__eps = self._drude_lorentz(wr, p)
             else:
                 raise ValueError("The model is not defined.")
             if 'no_loss' in model:
