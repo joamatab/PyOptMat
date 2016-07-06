@@ -119,11 +119,11 @@ class Material(object):
             self.params['wp'] = 13.7 / c0 * 10
             self.params['gp'] = 2 * np.pi * 8.5e-2 / c0 * 10
         elif model == 'polymer':
-            self.params['e'] = 2.26 + 1e-4j
+            self.params['e'] = 2.26
         elif model in ['solution', 'dielectric']:
-            self.params['e'] = self.params['RI'] ** 2 + 1e-4j
+            self.params['e'] = self.params['RI'] ** 2
         elif model in self.RIs:
-            self.params['e'] = self.RIs[model] ** 2 + 1e-4j
+            self.params['e'] = self.RIs[model] ** 2
 
     @property
     def im_factor(self):
