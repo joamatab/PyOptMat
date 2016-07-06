@@ -119,11 +119,11 @@ class Material(object):
             self.params['wp'] = 13.7 / c0 * 10
             self.params['gp'] = 2 * np.pi * 8.5e-2 / c0 * 10
         elif model == 'polymer':
-            self.params['e'] = 2.26
+            self.params['e'] = 2.26 + 1e-6j
         elif model in ['solution', 'dielectric']:
-            self.params['e'] = self.params['RI'] ** 2
+            self.params['e'] = self.params['RI'] ** 2 + 1e-6j
         elif model in self.RIs:
-            self.params['e'] = self.RIs[model] ** 2
+            self.params['e'] = self.RIs[model] ** 2 + 1e-6j
 
     @property
     def im_factor(self):
@@ -172,14 +172,14 @@ class Material(object):
             else:
                 raise ValueError("The model is not defined.")
             if 'no_loss' in model:
-                self.__eps = self.__eps.real + self.__eps.imag * 1e-4j
+                self.__eps = self.__eps.real + self.__eps.imag * 1e-6j
         return self.__eps
 
     def _drude(self, w, p):
         eps = p['e'] - p['wp'] ** 2 / (w ** 2 + 1.0j * p['gp'] * w)
         val = eps.real + 1j * self.im_factor * eps.imag
-        if val.imag < 1.0e-4:
-            val = val.real + 1.0e-4j
+        if val.imag < 1.0e-6:
+            val = val.real + 1.0e-6j
         return val
 
     def _drude_lorentz(self, w, p):
@@ -188,6 +188,6 @@ class Material(object):
             eps -= sn * wn ** 2 / (w ** 2 - wn ** 2 +
                                    1.0j * gn * w)
         val = eps.real + 1j * self.im_factor * eps.imag
-        if val.imag < 1.0e-4:
-            val = val.real + 1.0e-4j
+        if val.imag < 1.0e-6:
+            val = val.real + 1.0e-6j
         return val
