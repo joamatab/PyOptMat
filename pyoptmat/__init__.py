@@ -178,8 +178,8 @@ class Material(object):
     def _drude(self, w, p):
         eps = p['e'] - p['wp'] ** 2 / (w ** 2 + 1.0j * p['gp'] * w)
         val = eps.real + 1j * self.im_factor * eps.imag
-        if val.imag < 1.0e-6:
-            val = val.real + 1.0e-6j
+        if val.imag < 1.0e-12:
+            val = val.real + 1.0e-12j
         return val
 
     def _drude_lorentz(self, w, p):
@@ -188,6 +188,6 @@ class Material(object):
             eps -= sn * wn ** 2 / (w ** 2 - wn ** 2 +
                                    1.0j * gn * w)
         val = eps.real + 1j * self.im_factor * eps.imag
-        if val.imag < 1.0e-6:
-            val = val.real + 1.0e-6j
+        if val.imag < 1.0e-12:
+            val = val.real + 1.0e-12j
         return val
