@@ -41,6 +41,8 @@ class Material(object):
             'metal': 0.5 + 10j,
             'metal_SR': np.sqrt(5) * 1j,
             'metal_kd': np.sqrt(110) * 1j,
+            'SiO2': 1.443,
+            'Si3N4': 2.0,
             'SiN': 2.0,
             'KRS5': 2.4,
             'ZnSe': 2.4,
