@@ -21,7 +21,7 @@ class Material(object):
                     that must be 'dielectric', 'drude', 'drude_lorentz',
                     'haftel', 'gold_d', 'gold_dl', 'gold_h', 'air' or 'water'.
                     (default 'dielectric')
-                'e': For 'dielectric'
+                'e' or 'RI': For 'dielectric'
                 'e', 'wp', 'gp': For 'drude'
                 'e1', 'e1', 'tau', 'sp': For 'haftel'.
                 'e', 'wp', 'gp', 'ss', 'ws', 'gs': For 'drude_lorentz'.
@@ -123,7 +123,15 @@ class Material(object):
         elif model == 'polymer':
             self.params['e'] = 2.26
         elif model in ['solution', 'dielectric']:
-            self.params['e'] = self.params['RI'] ** 2
+            if 'RI' in self.params:
+                if 'e' in self.params:
+                    if self.params['e'] != self.params['RI'] ** 2:
+                        raise ValueError("e must be RI ** 2.")
+                else:
+                    self.params['e'] = self.params['RI'] ** 2
+            else:
+                if 'e' not in self.params:
+                    raise ValueError("'RI' or 'e' must be specified.")
         elif model in self.RIs:
             self.params['e'] = self.RIs[model] ** 2
 
