@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 from __future__ import division, print_function
 import numpy as np
-from scipy.constants import c
+from scipy.constants import eV, hbar, c
 
 
 class Material(object):
@@ -88,7 +88,7 @@ class Material(object):
         elif 'copper_jc' in model:
             from pyoptmat.jc import Johnson_Christy
             self._johnson_christy = Johnson_Christy('copper')
-        if 'gold_palik' in model:
+        elif 'gold_palik' in model:
             from pyoptmat.palik import Palik
             self._palik = Palik('gold')
         elif 'silver_palik' in model:
@@ -97,6 +97,12 @@ class Material(object):
         elif 'copper_palik' in model:
             from pyoptmat.palik import Palik
             self._palik = Palik('copper')
+        elif 'aluminium_rak' in model:
+            from pyoptmat.rakic import Rakic
+            self._rakic = Rakic()
+        elif 'aluminium_mcp' in model:
+            from pyoptmat.mcpeak import McPeak
+            self._mcpeak = McPeak()
         elif 'gold_dl' in model:
             self.params['e'] = 5.3983
             self.params['wp'] = 13.978 / c0 * 10
@@ -112,6 +118,16 @@ class Material(object):
             self.params['ss'] = (3.0079, 2.3410)
             self.params['ws'] = (8.1635 / c0 * 10, 38.316 / c0 * 10)
             self.params['gs'] = (437.85 / c0 * 10, 60.574 / c0 * 10)
+        elif 'aluminium_dl' in model:
+            unit = eV / hbar * 1e-6 / c
+            self.params['e'] = 1.0
+            self.params['wp'] = 10.83 * unit
+            self.params['gp'] = 0.047 * unit
+            self.params['ss'] = (1940.97, 4.706, 11.39, 0.558)
+            self.params['ws'] = (0.162 * unit, 1.544 * unit,
+                                 1.808 * unit, 3.473 * unit)
+            self.params['gs'] = (0.333 * unit, 0.312 * unit,
+                                 1.351 * unit, 3.382 * unit)
         elif 'gold_d' in model:
             self.params['e'] = 9.0685
             self.params['wp'] = 2 * np.pi * 2.1556 / c0 * 10
@@ -165,6 +181,10 @@ class Material(object):
                 self.__eps = self._johnson_christy(wr)
             elif model[-6:] == '_palik':
                 self.__eps = self._palik(wr)
+            elif model == 'aluminium_rak':
+                self.__eps = self._rakic(wr)
+            elif model == 'aluminium_mcp':
+                self.__eps = self._mcpeak(wr)
             elif model[-3:] == '_dl':
                 self.__eps = self._drude_lorentz(wr, p)
             elif model[-2:] == '_d':

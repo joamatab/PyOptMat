@@ -21,13 +21,10 @@ def test_johnson_christy():
     # plt.show()
 
     assert_true(np.allclose(
-        np.vectorize(gold)(jc.ws),
-        jc.ns ** 2 - jc.ks ** 2 + 2j * jc.ns * jc.ks))
+        np.vectorize(gold)(jc.ws), jc(jc.ws)))
     jc = silver._johnson_christy
     assert_true(np.allclose(
-        np.vectorize(silver)(jc.ws),
-        jc.ns ** 2 - jc.ks ** 2 + 2j * jc.ns * jc.ks))
+        np.vectorize(silver)(jc.ws), jc(jc.ws)))
     jc = copper._johnson_christy
     assert_true(np.allclose(
-        np.vectorize(copper)(jc.ws),
-        jc.ns ** 2 - jc.ks ** 2 + 2j * jc.ns * jc.ks))
+        np.vectorize(copper)(jc.ws), jc(jc.ws)))

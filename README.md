@@ -15,3 +15,15 @@ the data shown in [1] or [2], refering to the parameters used in [3] and [4].
 [4] A. Vial, A.-S. Grimault, D. Macı́as, D. Barchiesi, and M. L. D. L. Chapelle,
     Phys. Rev. B 71, 085416 (2005).
 
+The parameters of the dielectric function for Alminium are derived by fitting
+the data shown in [5], [6] and [7], refering to the parameters used in [8].
+
+[5] A. D. Raki\'{c}, A. B. Djuri\v{s}ic, J. M. Elazar, and M. L. Majewski,
+    Appl. Opt. 37, 5271-5283 (1998).
+[6] K. M. McPeak, S. V. Jayanti, S. J. P. Kress, S. Meyer, S. Iotti,
+    A. Rossinelli, and D. J. Norris,
+    ACS Photonics 2, 326-333 (2015).
+[7] M. N. Polyanskiy, http://refractiveindex.info/
+    Refractive index database (2015).
+[8] S. G. Rodrigo, F. J. Garc\'{i}a-Vidal, and L. Mart\'{i}n-Moreno,
+    Phys. Rev. B 77, 075401 (2008).
