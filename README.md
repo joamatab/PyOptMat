@@ -1,6 +1,6 @@
 # PyOptMat
 PyOptMat is a python package defining dielectric constants of optical materials.
-This software is released under the GNU General Public License version 2,
+This software is released under the GNU General Public License version 3,
 see LICENSE.
 
 The parameters of dielectric functions for noble metals are derived by fitting
@@ -15,7 +15,7 @@ the data shown in [1] or [2], refering to the parameters used in [3] and [4].
 [4] A. Vial, A.-S. Grimault, D. Macı́as, D. Barchiesi, and M. L. D. L. Chapelle,
     Phys. Rev. B 71, 085416 (2005).
 
-The parameters of the dielectric function for Alminium are derived by fitting
+The parameters of the dielectric function for Aluminium are derived by fitting
 the data shown in [5], [6] and [7], refering to the parameters used in [8].
 
 [5] A. D. Raki\'{c}, A. B. Djuri\v{s}ic, J. M. Elazar, and M. L. Majewski,
