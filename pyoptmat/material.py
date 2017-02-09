@@ -37,7 +37,9 @@ class Material(object):
         self.__im_factor = self.params.get('im_factor', 1.0)
         self.material = None
         self.bound_chek = self.params.get('bound_check', True)
-        if model == 'gold_dl':
+        if model == 'pec':
+            self.params['e'] = -1e8
+        elif model == 'gold_dl':
             ri = riip.RiiDataFrame()
             idx = ri.catalog[
                 (ri.catalog['shelf'] == 'DL') & (ri.catalog['book'] == 'Au') &
@@ -79,6 +81,8 @@ class Material(object):
             else:
                 if 'e' not in self.params:
                     raise ValueError("'RI' or 'e' must be specified.")
+        else:
+            raise ValueError("The model {} is not implemented.".format(model))
 
     @property
     def im_factor(self):
@@ -103,10 +107,8 @@ class Material(object):
             self.__w = wr
             model = self.model
             p = self.params
-            if model == 'dielectric':
+            if model in ['dielectric', 'pec']:
                 self.__eps = p['e']
-            elif model == 'pec':
-                self.__eps = -1e8
             elif model in ['gold_d', 'gold_dl', 'silver_dl', 'aluminium_dl']:
                 eps = self.material.eps(2 * np.pi / wr)
                 self.__eps = eps.real + 1j * self.im_factor * eps.imag
