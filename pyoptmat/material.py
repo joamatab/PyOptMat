@@ -27,6 +27,7 @@ class Material(object):
                     "Refractive index database," https://refractiveindex.info.
                 'im_factor': A float indicating the reduction factor for the
                     imaginary part of the dielectric constant
+                'bound_check': True if bound check should be done.
         """
         self.__w = None
         self.__eps = None
@@ -35,38 +36,39 @@ class Material(object):
         self.model = model
         self.__im_factor = self.params.get('im_factor', 1.0)
         self.material = None
+        self.bound_chek = self.params.get('bound_check', True)
         if model == 'gold_dl':
             ri = riip.RiiDataFrame()
             idx = ri.catalog[
                 (ri.catalog['shelf'] == 'DL') & (ri.catalog['book'] == 'Au') &
                 (ri.catalog['page'] == 'Stewart')].index[0]
-            self.material = ri.material(idx)
+            self.material = ri.material(idx, self.bound_chek)
         elif model == 'silver_dl':
             ri = riip.RiiDataFrame()
             idx = ri.catalog[
                 (ri.catalog['shelf'] == 'DL') & (ri.catalog['book'] == 'Ag') &
                 (ri.catalog['page'] == 'Vial')].index[0]
-            self.material = ri.material(idx)
+            self.material = ri.material(idx, self.bound_chek)
         elif model == 'aluminium_dl':
             ri = riip.RiiDataFrame()
             idx = ri.catalog[
                 (ri.catalog['shelf'] == 'DL') & (ri.catalog['book'] == 'Al') &
                 (ri.catalog['page'] == 'Rakic')].index[0]
-            self.material = ri.material(idx)
+            self.material = ri.material(idx, self.bound_chek)
         elif model == 'gold_d':
             ri = riip.RiiDataFrame()
             idx = ri.catalog[
                 (ri.catalog['shelf'] == 'Drude') &
                 (ri.catalog['book'] == 'Au') &
                 (ri.catalog['page'] == 'Vial')].index[0]
-            self.material = ri.material(idx)
+            self.material = ri.material(idx, self.bound_chek)
         elif model == 'rii':
             ri = riip.RiiDataFrame()
             idx = ri.catalog[
                 (ri.catalog['shelf'] == self.params['shelf']) &
                 (ri.catalog['book'] == self.params['book']) &
                 (ri.catalog['page'] == self.params['page'])].index[0]
-            self.material = ri.material(idx)
+            self.material = ri.material(idx, self.bound_chek)
         elif model == 'dielectric':
             if 'RI' in self.params:
                 if 'e' in self.params:
@@ -112,7 +114,7 @@ class Material(object):
                     self.__eps = self.__eps.real + 1.0e-12j
             elif model == 'rii':
                 if (self.material.catalog['tabulated'] == 'f' and
-                            int(self.material.catalog['formula']) <= 20):
+                        int(self.material.catalog['formula']) <= 20):
                     self.__eps = self.material.n(2 * np.pi / wr) ** 2
                 else:
                     eps = self.material.eps(2 * np.pi / wr)
