@@ -32,7 +32,6 @@ setup(name='pyoptmat',
       include_package_data=True,
       zip_safe=False,
       install_requires=[
-          'setuptools',
           'numpy',
           'scipy',
           'riip'
