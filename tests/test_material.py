@@ -21,7 +21,8 @@ def test_material():
     aluminium_dl = Material({'model': 'aluminium_dl'})
     aluminium_dl_low_loss = Material({'model': 'aluminium_dl',
                                       'im_factor': 0.1})
-    GaN = Material({'model': 'rii', 'shelf': 'main', 'book': 'GaN',
+    GaN = Material({'model': 'rii', 'shelf': 'main',
+                    'book': 'GaN (Experimental data)',
                     'page': 'Barker-o'})
     W = Material({'model': 'rii', 'shelf': 'DL', 'book': 'W',
                   'page': 'Rakic'})
