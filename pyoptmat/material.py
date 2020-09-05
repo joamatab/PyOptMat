@@ -19,8 +19,8 @@ class Material(object):
             params: A dict whose keys are as follows.
                 'model': A string indicating the model of dielectric function,
                     that must be 'dielectric', 'pec', 'rii',
-                    'gold_d', 'gold_dl', 'silver_dl', 'aluminium_dl'
-                    (default 'dielectric')
+                    'gold_d', 'gold_dl', 'gold_rakic', 'silver_dl',
+                    'aluminium_dl' (default 'dielectric')
                 'e' or 'RI': For 'dielectric'
                 'shelf', 'book', 'page': For 'rii',
                     Use data from M. N. Polyanskiy,
@@ -44,6 +44,12 @@ class Material(object):
             idx = ri.catalog[
                 (ri.catalog['shelf'] == 'DL') & (ri.catalog['book'] == 'Au') &
                 (ri.catalog['page'] == 'Stewart')].index[0]
+            self.material = ri.material(idx, self.bound_chek)
+        elif model == 'gold_rakic':
+            ri = riip.RiiDataFrame()
+            idx = ri.catalog[
+                (ri.catalog['shelf'] == 'DL') & (ri.catalog['book'] == 'Au') &
+                (ri.catalog['page'] == 'Rakic')].index[0]
             self.material = ri.material(idx, self.bound_chek)
         elif model == 'silver_dl':
             ri = riip.RiiDataFrame()
@@ -109,7 +115,8 @@ class Material(object):
             p = self.params
             if model in ['dielectric', 'pec']:
                 self.__eps = p['e']
-            elif model in ['gold_d', 'gold_dl', 'silver_dl', 'aluminium_dl']:
+            elif model in ['gold_d', 'gold_dl', 'gold_rakic', 'silver_dl',
+                           'aluminium_dl']:
                 eps = self.material.eps(2 * np.pi / wr)
                 self.__eps = eps.real + 1j * self.im_factor * eps.imag
                 if self.__eps.imag < 1.0e-12:
