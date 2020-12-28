@@ -108,25 +108,24 @@ class Material(object):
         Raises:
             ValueError: The model is not defined.
         """
-        wr = w.real
-        if self.__w is None or wr != self.__w:
-            self.__w = wr
+        if self.__w is None or w != self.__w:
+            self.__w = w
             model = self.model
             p = self.params
             if model in ['dielectric', 'pec']:
                 self.__eps = p['e']
             elif model in ['gold_d', 'gold_dl', 'gold_rakic', 'silver_dl',
                            'aluminium_dl']:
-                eps = self.material.eps(2 * np.pi / wr)
+                eps = self.material.eps(2 * np.pi / w)
                 self.__eps = eps.real + 1j * self.im_factor * eps.imag
                 if self.__eps.imag < 1.0e-12:
                     self.__eps = self.__eps.real + 1.0e-12j
             elif model == 'rii':
                 if (self.material.catalog['tabulated'] == 'f' and
                         int(self.material.catalog['formula']) <= 20):
-                    self.__eps = self.material.n(2 * np.pi / wr) ** 2
+                    self.__eps = self.material.n(2 * np.pi / w) ** 2
                 else:
-                    eps = self.material.eps(2 * np.pi / wr)
+                    eps = self.material.eps(2 * np.pi / w)
                     self.__eps = eps.real + 1j * self.im_factor * eps.imag
                     if self.__eps.imag < 1.0e-12:
                         self.__eps = self.__eps.real + 1.0e-12j
