@@ -84,11 +84,10 @@ class Material(object):
                         raise ValueError("e must be RI ** 2.")
                 else:
                     self.params['e'] = self.params['RI'] ** 2
-            else:
-                if 'e' not in self.params:
-                    raise ValueError("'RI' or 'e' must be specified.")
+            elif 'e' not in self.params:
+                raise ValueError("'RI' or 'e' must be specified.")
         else:
-            raise ValueError("The model {} is not implemented.".format(model))
+            raise ValueError(f"The model {model} is not implemented.")
 
     @property
     def im_factor(self):
